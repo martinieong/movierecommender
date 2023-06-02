@@ -1,0 +1,15 @@
+services:
+  api:
+    image: gpt_rest_server
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"           
+    volumes:
+      - ./rest_server:/app
+      # - ./cache:/root/.cache
+      - /data/.cache:/root/.cache
+    working_dir: /app
+    command: bash -c "python server.py --cpu"
+    restart: unless-stopped 

@@ -1,0 +1,29 @@
+services:
+  martin_api:
+    image: gpt_rest_server
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    container_name: martin_api
+    networks:
+      - gptapi
+    ports:
+      - "5556:5556"           
+    volumes:
+      - ./rest_server:/app
+      - /data/.cache:/root/.cache
+    working_dir: /app
+    command: bash -c "python server.py"
+
+    deploy:
+          resources:
+            reservations:
+              devices:
+              - driver: "nvidia"
+                device_ids: ["0"]
+                capabilities: [gpu]
+    restart: unless-stopped 
+
+networks:
+  gptapi:
+    name: gptapi-network
